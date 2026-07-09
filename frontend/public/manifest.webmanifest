@@ -1,0 +1,18 @@
+{
+  "name": "Wikindle",
+  "short_name": "Wikindle",
+  "description": "Offline-first personal wiki PWA",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#111214",
+  "theme_color": "#111214",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

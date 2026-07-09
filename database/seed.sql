@@ -1,0 +1,12 @@
+﻿-- Optional MVP 1 sample page. Replace @user_id with an existing user id before running.
+-- INSERT INTO pages (id, owner_id, title, slug, content, visibility)
+-- VALUES (UUID(), @user_id, 'Wikindle 시작 문서', 'wikindle-sijag-munseo', '= Wikindle 시작 문서 =
+-- Wikindle은 오프라인 우선 위키 PWA이다.
+--
+-- == 핵심 기능 ==
+-- '''문서 작성''', ''오프라인 저장'', [[그래프 뷰]], [[캔버스]]를 지원하는 것을 목표로 한다.
+--
+-- [목차]
+--
+-- == 내부 링크 ==
+-- 아직 존재하지 않는 문서도 [[미작성 문서]]처럼 링크로 표시할 수 있어야 한다.', 'private');
