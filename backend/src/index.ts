@@ -7,6 +7,8 @@ import { registerCanvasRoutes } from "./routes/canvasRoutes.js";
 import { registerCollaborationRoutes } from "./routes/collaborationRoutes.js";
 import { registerPageRoutes } from "./routes/pageRoutes.js";
 import { registerSyncRoutes } from "./routes/syncRoutes.js";
+import { pool } from "./db/pool.js";
+import { databaseErrorSummary } from "./db/errors.js";
 
 const app = fastify({ logger: true });
 
@@ -26,7 +28,27 @@ app.addHook("onRequest", async (request, reply) => {
 app.options("*", async (_request, reply) => reply.code(204).send());
 
 app.get("/api/health", async (_request, reply) => {
-  return reply.send({ ok: true, data: { status: "ok" }, error: null });
+  try {
+    await pool.query("SELECT 1");
+    return reply.send({
+      ok: true,
+      data: { status: "ok", database: "connected" },
+      error: null
+    });
+  } catch (error) {
+    app.log.error(
+      { databaseError: databaseErrorSummary(error) },
+      "Database health check failed"
+    );
+    return reply.code(503).send({
+      ok: false,
+      data: null,
+      error: {
+        code: "DATABASE_UNAVAILABLE",
+        message: "Database connection is unavailable"
+      }
+    });
+  }
 });
 
 await registerAuthRoutes(app);
@@ -40,4 +62,15 @@ app.setErrorHandler((error, _request, reply) => {
   return sendError(reply, 500, "INTERNAL_ERROR", "Internal server error");
 });
 
-await app.listen({ port: env.port, host: "0.0.0.0" });
+try {
+  await pool.query("SELECT 1");
+  app.log.info("MariaDB connection established");
+  await app.listen({ port: env.port, host: "0.0.0.0" });
+} catch (error) {
+  app.log.fatal(
+    { databaseError: databaseErrorSummary(error) },
+    "Application startup failed"
+  );
+  await pool.end();
+  process.exitCode = 1;
+}
