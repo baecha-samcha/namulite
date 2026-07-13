@@ -1,7 +1,9 @@
 ﻿# Database Schema
 
-The canonical MySQL schema is `database/schema.sql`.
+The canonical MariaDB schema is the ordered migration set in `database/migrations/`.
+
+Applied filenames and SHA-256 checksums are recorded in `schema_migrations`.
 
 Important MVP 1 tables: `users`, `sessions`, `pages`, `page_revisions`, and `page_links`.
 
-Future-ready tables: `permissions`, `canvas_boards`, `canvas_nodes`, and `sync_log`.
+Collaboration and sync tables: `permissions`, `canvas_boards`, `canvas_nodes`, and `sync_log`.
